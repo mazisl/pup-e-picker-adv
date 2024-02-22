@@ -1,13 +1,19 @@
 import { ReactNode } from "react";
+import { useDogs } from "../contexts/dogs.context";
 
-export const Section = ({
-  label,
-  children,
-}: {
-  // No more props than these two allowed
+interface SectionLayoutProps {
   label: string;
   children: ReactNode;
-}) => {
+}
+
+//only label and children allowed as props in this component
+export const Section = ({
+  label,
+  children
+}: SectionLayoutProps) => {
+
+  const {favoriteDogList, notFavoriteDogList, activeSelector, handleActiveSelector} = useDogs();
+
   return (
     <section id="main-section">
       <div className="container-header">
@@ -15,33 +21,41 @@ export const Section = ({
         <div className="selectors">
           {/* This should display the favorited count */}
           <div
-            className={`selector ${"active"}`}
+            className={`selector ${
+              activeSelector === "favorited" ? "active" : ""
+            }`}
             onClick={() => {
-              alert("click favorited");
+              handleActiveSelector("favorited");
             }}
           >
-            favorited ( {0} )
+            Favorited ({favoriteDogList.length})
           </div>
 
           {/* This should display the unfavorited count */}
           <div
-            className={`selector ${""}`}
+            className={`selector ${
+              activeSelector === "unfavorited" ? "active" : ""
+            }`}
             onClick={() => {
-              alert("click unfavorited");
+              handleActiveSelector("unfavorited");
             }}
           >
-            unfavorited ( {10} )
+            Unfavorited ({notFavoriteDogList.length})
           </div>
+
           <div
-            className={`selector ${""}`}
+            className={`selector ${
+              activeSelector === "createDog" ? "active" : ""
+            }`}
             onClick={() => {
-              alert("clicked create dog");
+              handleActiveSelector("createDog");
             }}
           >
-            create dog
+            Create Dog
           </div>
         </div>
       </div>
+
       <div className="content-container">{children}</div>
     </section>
   );

@@ -1,36 +1,45 @@
-import { Dog } from "../types";
+import type { Dog } from "../types";
+
 import { FavoriteButton } from "./FavoriteButton";
-import { TrashButton } from "./TrashButton";
 import { UnfavoriteButton } from "./UnfavoriteButton";
+import { TrashButton } from "./TrashButton";
+
+interface DogCardProps {
+  dog: Dog;
+  trashClickHandler: (dog: Dog) => void;
+  handleHeartClick: (dog:  Dog, isFavorite: boolean) => void;
+  isLoading: boolean;
+}
 
 // ! Do Not Make Changes To This File
 export const DogCard = ({
-  dog: { name, image, description, isFavorite },
-  onTrashIconClick,
-  onEmptyHeartClick,
-  onHeartClick,
+  dog,
+  trashClickHandler,
+  handleHeartClick,
   isLoading,
-}: {
-  dog: Dog;
-  onTrashIconClick: () => void;
-  onEmptyHeartClick: () => void;
-  onHeartClick: () => void;
-  isLoading: boolean;
-}) => {
+}: DogCardProps) => {
+  const onEmptyHeartClick = (dog: Dog) => {
+    handleHeartClick(dog, true);
+  };
+
+  const onHeartClick = (dog: Dog) => {
+    handleHeartClick(dog, false);
+  };
+
   return (
     <div className="dog-card">
       {/* Choose which button to show depending on if dog is a favorite */}
-      {isFavorite ? (
+      {dog.isFavorite ? (
         <UnfavoriteButton
           onClick={() => {
-            onHeartClick();
+            onHeartClick(dog);
           }}
           disabled={isLoading}
         />
       ) : (
         <FavoriteButton
           onClick={() => {
-            onEmptyHeartClick();
+            onEmptyHeartClick(dog);
           }}
           disabled={isLoading}
         />
@@ -39,7 +48,7 @@ export const DogCard = ({
       {/* Use this button to delete a puppy :( */}
       <TrashButton
         onClick={() => {
-          onTrashIconClick();
+          trashClickHandler(dog);
         }}
         disabled={isLoading}
       />
@@ -59,14 +68,14 @@ export const DogCard = ({
       {/* Try making className "unfavorite-overlay active"*/}
       <div className="unfavorite-overlay">{"</3"}</div>
 
-      {/* A Dogs Name */}
-      <p className="dog-name">{name}</p>
+      {/* A Dog Name */}
+      <p className="dog-name">{dog.name}</p>
 
-      {/* A Dogs Image */}
-      <img src={image} alt={name} />
+      {/* A Dog Image */}
+      <img src={dog.image} alt={dog.name} />
 
-      {/*  A Dogs description*/}
-      <p className="dog-description">{description}</p>
+      {/*  A Dog description*/}
+      <p className="dog-description">{dog.description}</p>
     </div>
   );
 };
